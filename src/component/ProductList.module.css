@@ -1,0 +1,29 @@
+/* components/ProductList.module.css */
+.imageWrapper {
+  overflow: hidden;
+}
+
+.productImage {
+  transition: transform 0.3s ease;
+}
+
+.productImage:hover {
+  transform: scale(1.1);
+}
+/* components/ProductList.module.css */
+.imageWrapper {
+  overflow: hidden;
+}
+
+.productImage {
+  object-fit: cover;
+}
+
+.productCard {
+  border: none;
+  transition: transform 0.3s ease;
+}
+
+.productCard:hover {
+  transform: translateY(-5px);
+}

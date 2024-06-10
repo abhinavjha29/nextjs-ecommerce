@@ -1,0 +1,19 @@
+.input-container {
+  position: relative;
+}
+
+.form-control {
+  padding-right: 30px; /* Adjust as needed */
+}
+
+.search-button {
+  position: absolute;
+  top: 50%;
+  right: 5px; /* Adjust as needed */
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 0.8em; /* Adjust as needed */
+  padding: 5px; /* Adjust as needed */
+}

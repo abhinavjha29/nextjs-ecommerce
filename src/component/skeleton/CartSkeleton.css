@@ -1,0 +1,59 @@
+/* CartSkeleton.module.css */
+.skeleton-animation {
+  background-image: linear-gradient(
+    90deg,
+    #f0f0f0 25%,
+    #e0e0e0 50%,
+    #f0f0f0 75%
+  );
+  background-size: 200%;
+  animation: shimmer 2s infinite linear;
+  border-radius: 5px;
+  overflow: hidden;
+  position: relative;
+}
+
+@keyframes shimmer {
+  100% {
+    background-position: 200%;
+  }
+}
+
+/* Additional styles for list group items */
+.list-group-item {
+  margin-bottom: 20px;
+}
+
+.list-group-item:last-child {
+  margin-bottom: 0;
+}
+
+/* Additional styles for modal content */
+.modal-content {
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.modal-header,
+.modal-footer {
+  padding: 15px;
+}
+
+.modal-header {
+  background-color: #f0f0f0;
+  border-bottom: 1px solid #ddd;
+}
+
+.modal-footer {
+  background-color: #f0f0f0;
+  border-top: 1px solid #ddd;
+}
+
+/* Additional styles for buttons */
+.btn {
+  transition: transform 0.2s ease-in-out;
+}
+
+.btn:hover {
+  transform: translateY(-3px);
+}
