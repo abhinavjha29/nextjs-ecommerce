@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 interface UserState {
   token: string | undefined | null;
   isAdmin?: string | undefined | null;
+  isLoggedIn: boolean;
 }
 
 // interface User {
@@ -18,6 +19,7 @@ const initialState: UserState = {
   // details: null,
   token: null,
   isAdmin: null,
+  isLoggedIn: false,
 };
 
 const userSlice = createSlice({
@@ -26,10 +28,12 @@ const userSlice = createSlice({
   reducers: {
     login(state: UserState) {
       state.token = Cookies.get("token");
+      state.isLoggedIn = true;
     },
     logout(state: UserState) {
       state.token = null;
       state.isAdmin = null;
+      state.isLoggedIn = false;
       Cookies.remove("isAdmin");
     },
     setIsAdmin(state: UserState) {

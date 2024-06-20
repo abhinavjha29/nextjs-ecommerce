@@ -1,6 +1,6 @@
 "use client";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FiSearch } from "react-icons/fi";
 import "./Search.css";
 
@@ -10,12 +10,18 @@ const Search: React.FC = () => {
 
   const { replace } = useRouter();
   const pathName = usePathname();
+  const params = new URLSearchParams();
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTerm(e.target.value);
+  };
+
   const handleSearch = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    const params = new URLSearchParams();
+
     if (term && term.length > 2) {
       params.set("query", term);
-    } else {
+    }
+    if (!term) {
       params.delete("query");
     }
     replace(`${pathName}?${params.toString()}`);
@@ -48,7 +54,7 @@ const Search: React.FC = () => {
               aria-label="Search"
               defaultValue={searchParams.get("query")?.toString()}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setTerm(e.target.value)
+                handleSearchChange(e)
               }
             />
             <button

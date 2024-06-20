@@ -6,8 +6,8 @@ import {
   fetchInvoices,
   updateInvoiceStatus,
   deleteInvoice,
-} from "../app/lib/InvoiceSlice";
-import { AppDispatch, RootState } from "@/app/lib/store";
+} from '@/app/lib/store/InvoiceSlice'
+import { AppDispatch, RootState } from "@/app/lib/store/store";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { MdDelete } from "react-icons/md";
@@ -19,15 +19,17 @@ const Invoice: React.FC = () => {
   const router = useRouter();
   const isAdmin = Cookies.get("isAdmin");
 
+  // useEffect(() => {
+  //   if (isAdmin === "true") {
+  //     dispatch(fetchInvoices());
+  //   } else {
+  //     toast.error("You Are not Authorised");
+  //     router.replace("/");
+  //   }
+  // }, [dispatch]);
   useEffect(() => {
-    if (isAdmin === "true") {
-      dispatch(fetchInvoices());
-    } else {
-      toast.error("You Are not Authorised");
-      router.replace("/");
-    }
+    dispatch(fetchInvoices());
   }, [dispatch]);
-
   const handleUpdateStatus = (
     id: string,
     status: "pending" | "fulfilled" | "rejected"

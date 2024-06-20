@@ -1,4 +1,5 @@
-import { RootState } from "@/app/lib/store";
+"use client";
+import { RootState } from "@/app/lib/store/store";
 import React from "react";
 import { useSelector } from "react-redux";
 import "./Pagination.css";
@@ -27,7 +28,9 @@ const Pagination: React.FC<PaginationProps> = ({ setPage }) => {
   };
   const incPage = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
-    setPage(currentPage + 1);
+    if (currentPage < totalPages) {
+      setPage(currentPage + 1);
+    }
   };
   return (
     <nav aria-label="Page navigation example page-class">

@@ -2,10 +2,11 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { Product } from "../types";
+import { Product } from "@/types";
 import Cookies from "js-cookie";
 import { useRouter, useSearchParams } from "next/navigation";
-import SkeletonSingleProduct from "./skeleton/SkeletonSingleProduct";
+import SkeletonSingleProduct from "../skeleton/SkeletonSingleProduct";
+
 interface ProductPageProps {
   product: Product | null;
 }
@@ -20,13 +21,16 @@ const ProductPage: React.FC<ProductPageProps> = ({ product }) => {
   };
   const token = Cookies.get("token");
 
-  console.log(product);
   if (!token) {
     router.replace("/");
   }
   if (!product) {
     return <SkeletonSingleProduct />;
   }
+  const handleGoBack = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    router.back();
+  };
   return (
     <div className="container">
       <div className="row">
@@ -80,8 +84,19 @@ const ProductPage: React.FC<ProductPageProps> = ({ product }) => {
           </div>
           <div className="mt-3">
             <p>
-              {/* Rating: {product?.rating.rate} ({product?.rating.count} reviews) */}
+              Rating: {product?.rating.rate} ({product?.rating.count} reviews)
             </p>
+          </div>
+          <div className="mt-3">
+            <button
+              className="btn btn-secondary me-2"
+              onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
+                handleGoBack(e)
+              }
+            >
+              Go Back
+            </button>
+            <button className="btn btn-success">Add to Cart</button>
           </div>
         </div>
       </div>

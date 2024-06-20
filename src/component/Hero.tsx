@@ -1,11 +1,11 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import LoginForm from "./LoginForm";
+import LoginForm from "./forms/LoginForm";
 import Cookies from "js-cookie";
-import { login, logout } from "@/app/lib/UserSlice";
+import { login, logout } from "@/app/lib/store/UserSlice";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import { RootState } from "@/app/lib/store";
+import { RootState } from "@/app/lib/store/store";
 
 const Hero = () => {
   const dispatch = useDispatch();

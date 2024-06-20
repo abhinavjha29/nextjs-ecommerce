@@ -2,10 +2,11 @@ import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { useSelector } from "react-redux";
-import { RootState } from "./store";
+
 import { toast } from "react-toastify";
 import { Product } from "@/types";
 import { cookies } from "next/headers";
+import axiosClient from "../AxiosClient";
 interface IProduct {
   productId: string;
   title: string;
@@ -40,15 +41,7 @@ const initialState: InvoiceState = {
 export const fetchInvoices = createAsyncThunk(
   "invoices/fetchInvoices",
   async () => {
-    const token = Cookies.get("token");
-    const response = await axios.get(
-      "http://localhost:3004/invoice/getinvoice",
-      {
-        headers: {
-          Authorization: token,
-        },
-      }
-    );
+    const response = await axiosClient.get("/invoice/getinvoice");
 
     return response.data;
   }
@@ -58,17 +51,10 @@ export const createInvoice = createAsyncThunk<Invoice, Product[]>(
   "invoices/createInvoice",
   async (product) => {
     try {
-      const token = Cookies.get("token");
       console.log(product);
-      const response = await axios.post(
-        "http://localhost:3004/invoice/postinvoice",
-        { product },
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
+      const response = await axiosClient.post("/invoice/postinvoice", {
+        product,
+      });
       if ((response.status = 201)) {
         toast.success("Order succesful");
 
@@ -92,35 +78,21 @@ export const updateInvoiceStatus = createAsyncThunk(
     id: string;
     status: "pending" | "fulfilled" | "rejected";
   }) => {
-    const token = Cookies.get("token");
     console.log(id);
-    const response = await axios.patch(
-      `http://localhost:3004/invoice/updatestatus/${id}`,
-      { status },
-      {
-        headers: {
-          Authorization: token,
-        },
-      }
-    );
+    const response = await axiosClient.patch(`/invoice/updatestatus/${id}`, {
+      status,
+    });
     return response.data;
   }
 );
 
-export const deleteInvoice = createAsyncThunk<string, any>(
+export const deleteInvoice = createAsyncThunk<string, undefined>(
   "invoices/deleteInvoice",
-  async (id: string) => {
+  async (id: any) => {
     try {
       const token = Cookies.get("token");
       if (token) {
-        await axios.delete(
-          `http://localhost:3004/invoice/deleteinvoice/${id}`,
-          {
-            headers: {
-              Authorization: token,
-            },
-          }
-        );
+        await axiosClient.delete(`/invoice/deleteinvoice/${id}`);
         return id;
       }
     } catch (error) {

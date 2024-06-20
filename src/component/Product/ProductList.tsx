@@ -2,15 +2,14 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import styles from "./ProductList.module.css";
-import { Product } from "../types";
+import { Product } from "../../types";
 import Image from "next/image";
 import Link from "next/link";
 import { useDispatch } from "react-redux";
-import { AppDispatch } from "@/app/lib/store";
-import Cookies from "js-cookie";
-import { toast } from "react-toastify";
-import axios from "axios";
-import { addProductToCart } from "@/app/lib/CartSlice";
+import { AppDispatch, RootState } from "@/app/lib/store/store";
+
+import { addProductToCart } from "@/app/lib/store/CartSlice";
+import { useSelector } from "react-redux";
 
 interface ProductListProps {
   products: Product[];

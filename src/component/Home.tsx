@@ -14,6 +14,7 @@ const HomePage: React.FC = () => {
   const headerRef = useRef<HTMLHeadingElement>(null);
   const paragraphRef = useRef<HTMLParagraphElement>(null);
   const productRefs = useRef<HTMLDivElement[]>([]);
+
   const products = [
     {
       rating: {

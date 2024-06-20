@@ -1,18 +1,19 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "@/app/lib/store";
+import { AppDispatch, RootState } from "@/app/lib/store/store";
 import {
   deleteAllCartProduct,
   deleteCartProduct,
   fetchCartProducts,
-} from "@/app/lib/CartSlice";
+} from "@/app/lib/store/CartSlice";
 import { Product } from "@/types";
 import axios from "axios";
 import Cookies from "js-cookie";
-import { createInvoice } from "@/app/lib/InvoiceSlice";
+import { createInvoice } from "@/app/lib/store/InvoiceSlice";
 import { toast } from "react-toastify";
-import CartSkeleton from "./skeleton/CartSkeleton";
+import CartSkeleton from "../skeleton/CartSkeleton";
+import { PROFILE } from "@/utils/constants";
 
 const Cart: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -46,10 +47,15 @@ const Cart: React.FC = () => {
   };
 
   const confirmOrder = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    await dispatch(createInvoice(cart));
-    dispatch(deleteAllCartProduct());
+    const profile = localStorage.getItem(PROFILE);
+    if (profile) {
+      await dispatch(createInvoice(cart));
+      dispatch(deleteAllCartProduct());
 
-    setShowModal(false);
+      setShowModal(false);
+    } else {
+      toast.error("Please Complete Your Profile");
+    }
   };
 
   const closeModal = () => {

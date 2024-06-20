@@ -1,4 +1,4 @@
-import SingleProduct from "@/component/SingleProduct";
+import SingleProduct from "@/component/Product/SingleProduct";
 import React from "react";
 
 const page = () => {

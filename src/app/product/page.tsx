@@ -1,73 +1,82 @@
-// pages/products.tsx
+// // pages/products.tsx
 "use client";
 import React, { useEffect, useState } from "react";
-import ProductList from "@/component/ProductList";
-import Cookies from "js-cookie";
-import { fetchProducts } from "../api/products/route";
-import Search from "@/component/Search";
+import ProductList from "@/component/Product/ProductList";
+import Search from "@/component/Product/Search";
 import { Product } from "@/types";
 
-import { cookies } from "next/headers";
-import { useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../lib/store";
+import { AppDispatch, RootState } from "../lib/store/store";
 import { redirect, usePathname, useSearchParams } from "next/navigation";
 import { useDispatch } from "react-redux";
-import { fetchAllProducts } from "../lib/ProductSlice";
+import { fetchAllProducts } from "../lib/store/ProductSlice";
 import SkeletonProduct from "@/component/skeleton/SkeletonProduct";
-import Pagination from "@/component/Pagination";
+import Pagination from "@/component/Product/Pagination";
+
+import { useMutation, useQuery } from "react-query";
+
+import { toast } from "react-toastify";
 
 const page = () => {
   const dispatch: AppDispatch = useDispatch();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
   const [currentPage, setPage] = useState<number>(1);
   // const [products, setProducts] = useState<Product[]>([]);
   const searchParams = useSearchParams();
   const query = searchParams.get("query");
   console.log("query is", query);
-  const products = useSelector((state: RootState) => state.product.product);
-  const loading = useSelector((state: RootState) => state.product.loading);
-  // console.log(tempProducts);
+  const [product, setProduct] = useState<Product[]>([]);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
-    const token = Cookies.get("token");
-    if (token) {
-      setIsLoggedIn(true);
-      console.log("current page at", currentPage);
-      dispatch(fetchAllProducts({ currentPage, search: query }));
+    console.log("current page at", currentPage);
+    if (query) {
+      setPage(1);
     }
+    mutate();
+    dispatch(fetchAllProducts({ currentPage, search: query }));
   }, [dispatch, currentPage, query]);
 
-  // const searchHandler = (searchWord: string) => {
-  //   if (searchWord) {
-  //     searchWord = searchWord.toLowerCase();
-  //     const filtered: Product[] = tempProducts.filter((item: Product) =>
-  //       item.title.toLowerCase().includes(searchWord)
-  //     );
-  //     setProducts(filtered);
-  //   }
-  //   if (!searchWord) {
-  //     setProducts([]);
-  //   }
-  // };
-  console.log(isLoggedIn);
-  if (loading === "loading") {
+  const fetchProduct = async () => {
+    try {
+      const response = await dispatch(
+        fetchAllProducts({ currentPage, search: query })
+      ).unwrap();
+      console.log("resp is=>", response);
+      return response.products;
+    } catch (error) {
+      throw new Error("Something went wrong");
+    }
+  };
+  const { mutate, isLoading } = useMutation(fetchProduct, {
+    onSuccess: (data) => {
+      console.log(data);
+      setProduct(data);
+    },
+    onError: (err) => {
+      console.error(err);
+      toast.error("something went wrong");
+      setError(true);
+    },
+  });
+  console.log("data of product is =>", product);
+  console.log("is loding is =>", isLoading);
+  if (isLoading) {
     return <SkeletonProduct />;
   }
-  if (loading === "error") {
+  if (error) {
     return <h1>Something went wrong</h1>;
+  }
+  if (!isLoading && product.length === 0) {
+    return <SkeletonProduct />;
   }
   return (
     <div>
       <Search />
       <h1 className="text-center my-4">Products</h1>
-      {isLoggedIn && products.length === 0 && <h1>No Product Matches </h1>}
-      {isLoggedIn && products?.length > 0 && (
-        <ProductList products={products} />
-      )}
-      {!isLoggedIn && <h1>plese login</h1>}
+      {!isLoading && !product && <h1>No Product Found</h1>}
+      {!isLoading && product?.length > 0 && <ProductList products={product} />}
 
       <div>
-        {" "}
         <Pagination setPage={setPage} />
       </div>
     </div>

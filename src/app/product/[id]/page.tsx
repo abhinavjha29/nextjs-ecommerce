@@ -1,8 +1,8 @@
 "use client";
 
 import { getSingleProduct } from "@/app/api/products/route";
-import { fetchSingleProduct } from "@/app/lib/ProductSlice";
-import { AppDispatch, RootState } from "@/app/lib/store";
+import { fetchSingleProduct } from "@/app/lib/store/ProductSlice";
+import { AppDispatch, RootState } from "@/app/lib/store/store";
 import SingleProduct from "@/component/SingleProduct";
 import SkeletonSingleProduct from "@/component/skeleton/SkeletonSingleProduct";
 

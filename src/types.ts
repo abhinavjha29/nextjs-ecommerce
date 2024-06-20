@@ -5,7 +5,7 @@ export interface Rating {
 }
 
 export interface Product {
-  _id: string;
+  _id?: string;
   id: number;
   title: string;
   price: number;
@@ -36,8 +36,18 @@ export interface ProductData {
   products: Product[];
   paginationInfo: PaginationInfo;
 }
-interface PaginationInfo {
+export interface PaginationInfo {
   currentPage: number;
   totalPages: number;
   totalProducts: number;
+}
+export interface ISignupFormInputs {
+  name: string;
+  email: string;
+  password: string;
+}
+export interface IFormInputs {
+  name: string;
+  email: string;
+  password: string;
 }

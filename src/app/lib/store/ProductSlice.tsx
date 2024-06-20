@@ -7,6 +7,7 @@ import {
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import Cookies from "js-cookie";
 import axios from "axios";
+import axiosClient from "../AxiosClient";
 
 const initialState: ProductState = {
   product: [],
@@ -24,17 +25,10 @@ export const fetchAllProducts = createAsyncThunk<
   ProductData,
   { currentPage: number; search: string | null }
 >("products/fetchAllProducts", async ({ currentPage, search }) => {
-  const token: string | undefined = Cookies.get("token");
+  const response = await axiosClient.get("/product/getallproducts", {
+    params: { page: currentPage, perPage: 6, search },
+  });
 
-  const response = await axios.get(
-    "http://localhost:3004/product/getallproducts",
-    {
-      params: { page: currentPage, perPage: 6, search },
-      headers: {
-        Authorization: token,
-      },
-    }
-  );
   console.log("data at store is", response.data);
   return response.data;
 });
@@ -47,8 +41,8 @@ export const fetchSingleProduct = createAsyncThunk(
       if (!token) {
         throw new Error();
       }
-      const response = await axios.get(
-        `http://localhost:3004/product/getsingleproduct/${id}`,
+      const response = await axiosClient.get(
+        `/product/getsingleproduct/${id}`,
         {
           headers: {
             Authorization: token,

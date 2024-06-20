@@ -6,6 +6,7 @@ import { Product } from "@/types";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { stat } from "fs";
+import axiosClient from "../AxiosClient";
 
 interface CartState {
   cartProducts: Product[];
@@ -36,14 +37,7 @@ export const fetchCartProducts = createAsyncThunk(
     try {
       const token = Cookies.get("token");
       if (token) {
-        const response = await axios.get(
-          "http://localhost:3004/cart/getcartitem",
-          {
-            headers: {
-              Authorization: token,
-            },
-          }
-        );
+        const response = await axiosClient.get("/cart/getcartitem");
         if (response.data) {
           console.log(response.data);
           return response.data.item;
@@ -68,15 +62,7 @@ export const addProductToCart = createAsyncThunk<CartResponse, Product>(
 
       const quantity = 1;
       const cartItem = { ...product, quantity };
-      const response = await axios.post(
-        "http://localhost:3004/cart/addtocart",
-        { cartItem },
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
+      const response = await axiosClient.post("/cart/addtocart", { cartItem });
       if (response) {
         toast.success("added product");
       } else {
@@ -94,25 +80,13 @@ export const deleteCartProduct = createAsyncThunk<Product, number>(
   "/deletecartproduct",
   async (id) => {
     try {
-      const token = Cookies.get("token");
-
-      if (token) {
-        const response = await axios.delete(
-          `http://localhost:3004/cart/deleteProduct/${id}`,
-          {
-            headers: {
-              Authorization: token,
-            },
-          }
-        );
-        if (response.status === 200) {
-          console.log(response.data);
-          toast.success("Item Removed"); //need to change the type error
-          return response.data.product;
-        } else {
-          toast.error("Product cant be removed");
-          console.log("error", response);
-        }
+      const response = await axiosClient.delete(`/cart/deleteProduct/${id}`);
+      if (response.status === 200) {
+        toast.success("Item Removed");
+        return response.data.product;
+      } else {
+        toast.error("Product cant be removed");
+        console.log("error", response);
       }
     } catch (error) {
       console.log(error);
@@ -127,14 +101,7 @@ export const deleteAllCartProduct = createAsyncThunk(
       const token = Cookies.get("token");
       if (token) {
         console.log("inside");
-        const response = await axios.delete(
-          "http://localhost:3004/cart/deleteall",
-          {
-            headers: {
-              Authorization: token,
-            },
-          }
-        );
+        const response = await axiosClient.delete("/cart/deleteall");
         if (response.status === 200) {
           return true;
         } else {

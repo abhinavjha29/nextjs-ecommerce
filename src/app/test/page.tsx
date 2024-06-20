@@ -1,10 +1,10 @@
-import Invoice from "@/component/Invoice";
+import UpdateProfile from "@/component/modals/UpdateProfile";
 import React from "react";
 
 const page = () => {
   return (
     <div>
-      <Invoice />
+      <UpdateProfile />
     </div>
   );
 };
